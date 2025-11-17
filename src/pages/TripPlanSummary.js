@@ -21,6 +21,20 @@ const TripPlanSummary = () => {
         { id: 5, name: 'Riyas', sourceCity: 'Mumbai' }
     ];
 
+    // Trip booking data
+    const tripData = {
+        destination: {
+            name: 'Japan Itenary',
+            price: 400,
+            totalPrice: 2500,
+            persons: 4,
+            dates: 'Apr 15 to Apr 22',
+            cities: ['Tokyo', 'Osaka', 'Mt.Fuji', 'Kyoto']
+        },
+        placesToVisit: placesToVisit,
+        tripMates: tripMates
+    };
+
     const handlePrevPlace = () => {
         setCurrentPlaceIndex((prev) => (prev === 0 ? placesToVisit.length - 1 : prev - 1));
     };
@@ -29,24 +43,28 @@ const TripPlanSummary = () => {
         setCurrentPlaceIndex((prev) => (prev === placesToVisit.length - 1 ? 0 : prev + 1));
     };
 
+    // Navigate to Checkout
+    const handleBookTrip = () => {
+        navigate('/checkout', {
+            state: {
+                destination: tripData.destination,
+                tripDetails: tripData
+            }
+        });
+    };
+
     return (
         <div className="trip-plan-summary">
             {/* Header */}
             <div className="summary-header">
                 <div className="header-logo">
                     <svg width="40" height="40" viewBox="0 0 50 50" fill="none">
-                        <circle cx="25" cy="25" r="23" stroke="white" strokeWidth="2" />
-                        <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" fill="white" fontSize="20">P</text>
+                        
+                        <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" fill="white" fontSize="20"></text>
                     </svg>
-                   
                 </div>
                 <div className="header-title">YOUR PERFECT JAPAN PLAN</div>
-                <div className="header-actions">
-                    <button className="icon-btn">✏️</button>
-                    <button className="icon-btn">📥</button>
-                    <button className="icon-btn">🔔</button>
-                    <button className="icon-btn">👤</button>
-                </div>
+                
             </div>
 
             {/* Main Content */}
@@ -94,7 +112,7 @@ const TripPlanSummary = () => {
                             <span>Source City</span>
                         </div>
                         <div className="mates-list">
-                            {tripMates.map((mate, index) => (
+                            {tripMates.map((mate) => (
                                 <div key={mate.id} className="mate-item">
                                     <div className="mate-info">
                                         <span className="mate-avatar">👤</span>
@@ -106,7 +124,6 @@ const TripPlanSummary = () => {
                         </div>
                     </div>
 
-                    {/* Places to Visit */}
                     {/* Places to Visit */}
                     <div className="summary-card places-card">
                         <div className="card-title">Places to Visit</div>
@@ -141,7 +158,6 @@ const TripPlanSummary = () => {
                         </div>
                     </div>
 
-
                     {/* Documents Required */}
                     <div className="summary-card documents-card">
                         <div className="card-title">Document Required for travel</div>
@@ -167,7 +183,9 @@ const TripPlanSummary = () => {
                     {/* Action Buttons */}
                     <div className="action-buttons-row">
                         <button className="action-btn primary">View Daywise Plan</button>
-                        <button className="action-btn secondary">Book Trip</button>
+                        <button className="action-btn secondary" onClick={handleBookTrip}>
+                            Book Trip
+                        </button>
                     </div>
 
                     {/* Total Cost Card */}

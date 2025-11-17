@@ -1,7 +1,15 @@
-/* Main Container */
+/* ============================================
+   MAIN CONTAINER & BACKGROUND
+   ============================================ */
+
 .trending-destination {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  width: 100%;
+  background: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -9,11 +17,41 @@
   overflow: hidden;
 }
 
+.trending-destination::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.05) 50%, 
+    transparent 100%);
+  animation: shimmer 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ============================================
+   TRENDING CONTAINER
+   ============================================ */
+
 .trending-container {
   width: 100%;
   max-width: 1400px;
-  padding: 40px;
+  padding: 40px 40px 40px 100px;
   position: relative;
+}
+
+.trending-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.trending-menu-logo {
+  height: 38px;
+  width: auto;
+  object-fit: contain;
+  display: block;
 }
 
 .trending-title {
@@ -26,7 +64,160 @@
   font-family: 'Brush Script MT', cursive;
 }
 
-/* Stacked Cards Wrapper */
+/* ============================================
+   LEFT MENU ICON
+   ============================================ */
+
+.left-menu-icon {
+  position: fixed;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.left-menu-icon img {
+  width: 50px;
+  height: 50px;
+  display: block;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+}
+
+.left-menu-icon:hover {
+  transform: translateY(-50%) scale(1.1);
+}
+
+.left-menu-icon:hover img {
+  transform: rotate(90deg);
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+}
+
+/* ============================================
+   SLIDE-OUT MENU
+   ============================================ */
+
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  z-index: 998;
+  animation: fadeIn 0.3s ease;
+}
+
+.menu-panel {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 320px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  transform: translateX(-100%);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+}
+
+.menu-panel.open {
+  transform: translateX(0);
+}
+
+.menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 25px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.menu-header h3 {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.menu-close-btn {
+  width: 35px;
+  height: 35px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.menu-close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+.menu-categories {
+  padding: 20px 0;
+}
+
+.menu-category-item {
+  display: flex;
+  align-items: center;
+  padding: 20px 25px;
+  cursor: pointer;
+  border-left: 4px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.menu-category-item:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-left-color: white;
+}
+
+.category-icon {
+  font-size: 2.5rem;
+  margin-right: 20px;
+}
+
+.category-info {
+  flex: 1;
+}
+
+.category-info h4 {
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 5px 0;
+}
+
+.category-info p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.category-arrow {
+  color: white;
+  font-size: 1.5rem;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.3s ease;
+}
+
+.menu-category-item:hover .category-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ============================================
+   STACKED CARDS CAROUSEL
+   ============================================ */
+
 .stacked-cards-wrapper {
   position: relative;
   height: 500px;
@@ -42,7 +233,6 @@
   perspective: 1500px;
 }
 
-/* Destination Card */
 .stacked-card {
   position: absolute;
   left: 50%;
@@ -68,7 +258,10 @@
   object-fit: cover;
 }
 
-/* Icon Badge - Left Side */
+/* ============================================
+   CARD ELEMENTS
+   ============================================ */
+
 .icon-badge {
   position: absolute;
   top: 20px;
@@ -88,12 +281,10 @@
   font-size: 2rem;
 }
 
-/* Stats Container - Top Center */
-/* Stats Container - Move to Right Side */
 .stats-container {
   position: absolute;
   top: 20px;
-  right: 20px;  /* Changed from left: 50% and transform */
+  right: 20px;
   display: flex;
   gap: 15px;
   z-index: 5;
@@ -118,67 +309,6 @@
   height: 16px;
 }
 
-/* Action Buttons - Right Side - FIXED */
-.action-buttons {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  z-index: 5;
-}
-
-.action-btn {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  padding: 0;
-  overflow: hidden;
-}
-
-.action-btn:hover {
-  transform: scale(1.1);
-  background: white;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-.action-btn svg {
-  width: 22px;
-  height: 22px;
-  flex-shrink: 0;
-}
-
-.info-btn svg {
-  stroke: #667eea;
-  stroke-width: 2.5;
-}
-
-.favorite-btn svg {
-  stroke: #667eea;
-  stroke-width: 2.5;
-  fill: none;
-}
-
-.favorite-btn:hover svg {
-  stroke: #ff6b6b;
-  fill: #ff6b6b;
-}
-
-.info-btn:hover svg {
-  stroke: #4fc3f7;
-}
-
-/* Card Content - Bottom Overlay */
 .card-content {
   position: absolute;
   bottom: 0;
@@ -216,7 +346,10 @@
   margin: 0;
 }
 
-/* Navigation Arrows */
+/* ============================================
+   NAVIGATION CONTROLS
+   ============================================ */
+
 .nav-arrow {
   position: absolute;
   top: 50%;
@@ -229,12 +362,12 @@
   font-size: 2.5rem;
   color: #667eea;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  transition: all 0.3s ease;
 }
 
 .nav-arrow-left {
@@ -251,7 +384,6 @@
   box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
 }
 
-/* Pagination Dots */
 .pagination-dots {
   display: flex;
   justify-content: center;
@@ -279,13 +411,18 @@
   background: rgba(255, 255, 255, 0.7);
 }
 
-/* Plan Trip Button */
+/* ============================================
+   BUTTONS
+   ============================================ */
+
 .plan-trip-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
   padding: 18px 40px;
+  margin: 30px auto 0;
+  width: fit-content;
   background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(10px);
   border: 2px solid rgba(255, 255, 255, 0.3);
@@ -294,10 +431,8 @@
   font-size: 1.2rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  margin: 30px auto 0;
-  width: fit-content;
+  transition: all 0.3s ease;
 }
 
 .plan-trip-btn:hover {
@@ -312,7 +447,6 @@
   height: 22px;
 }
 
-/* Side Buttons */
 .side-buttons {
   position: fixed;
   right: 30px;
@@ -334,8 +468,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
 }
 
 .side-btn:hover {
@@ -349,13 +483,13 @@
   height: 24px;
 }
 
-/* Login Modal */
+/* ============================================
+   LOGIN MODAL
+   ============================================ */
+
 .login-required-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(5px);
   display: flex;
@@ -409,8 +543,8 @@
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
 }
 
 .modal-btn-primary:hover {
@@ -435,57 +569,9 @@
   border-color: #ccc;
 }
 
-/* Main Container with Simple Mountain Background */
-/* Main Container - Full Page Coverage */
-.trending-destination {
-  min-height: 100vh;
-  width: 100%;
-  background: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-}
-.trending-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between; /* title left, logo right */
-  margin-bottom: 24px;
-}
-
-.trending-menu-logo {
-  height: 38px;
-  width: auto;
-  object-fit: contain;
-  display: block;
-}
-
-
-/* Optional: Subtle animation */
-.trending-destination::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(45deg, 
-    transparent 0%, 
-    rgba(255, 255, 255, 0.05) 50%, 
-    transparent 100%);
-  animation: shimmer 3s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes shimmer {
-  0%, 100% { opacity: 0; }
-  50% { opacity: 1; }
-}
+/* ============================================
+   ANIMATIONS
+   ============================================ */
 
 @keyframes fadeIn {
   from {
@@ -507,7 +593,19 @@
   }
 }
 
-/* Responsive */
+@keyframes shimmer {
+  0%, 100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
 @media (max-width: 1024px) {
   .stacked-card {
     width: 600px;
@@ -520,6 +618,20 @@
 }
 
 @media (max-width: 768px) {
+  .left-menu-icon {
+    left: 10px;
+  }
+  
+  .left-menu-icon img {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .trending-container {
+    padding-left: 70px;
+    padding-right: 20px;
+  }
+  
   .stacked-card {
     width: 90%;
     height: 350px;
@@ -545,11 +657,208 @@
   
   .stats-container {
     flex-wrap: wrap;
-    width: 90%;
+    gap: 10px;
   }
   
-  .action-btn {
-    width: 45px;
-    height: 45px;
+  .stat-badge {
+    padding: 8px 15px;
+    font-size: 0.85rem;
+  }
+  
+  .menu-panel {
+    width: 280px;
+  }
+  
+  .menu-header {
+    padding: 25px 20px;
+  }
+  
+  .menu-category-item {
+    padding: 18px 20px;
+  }
+  
+  .category-icon {
+    font-size: 2rem;
+    margin-right: 15px;
+  }
+  
+  .side-buttons {
+    right: 15px;
+    bottom: 15px;
+  }
+  
+  .side-btn {
+    width: 50px;
+    height: 50px;
+  }
+}
+/* Card action icons (Info and Like buttons) */
+.card-action-icons {
+  position: absolute;
+  top: 75px;           /* Move the icons further down */
+  right: 15px;
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  background: rgba(7, 7, 7, 0.9);
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.icon-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.icon-btn img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.like-icon-btn.liked {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+}
+
+.like-icon-btn.liked img {
+  filter: brightness(0) invert(1);
+}
+
+/* Info Modal Styles */
+.info-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  backdrop-filter: blur(5px);
+}
+
+.info-modal {
+  background: black;
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 600px;
+  width: 90%;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.info-modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(0, 0, 0, 0.1);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #333;
+}
+
+.info-modal-close:hover {
+  background: rgba(0, 0, 0, 0.2);
+  transform: rotate(90deg);
+}
+
+.info-modal-content {
+  text-align: center;
+}
+
+.info-modal-icon {
+  font-size: 60px;
+  margin-bottom: 20px;
+}
+
+.info-modal h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.info-modal-description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.info-modal-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding-top: 20px;
+  border-top: 2px solid #f0f0f0;
+}
+
+.info-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.info-stat-label {
+  font-size: 0.9rem;
+  color: #999;
+  font-weight: 500;
+}
+
+.info-stat-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #667eea;
+}
+
+/* Responsive for info modal */
+@media (max-width: 768px) {
+  .info-modal {
+    padding: 30px 20px;
+  }
+
+  .info-modal h2 {
+    font-size: 1.5rem;
+  }
+
+  .info-modal-description {
+    font-size: 1rem;
+  }
+
+  .info-modal-stats {
+    grid-template-columns: 1fr;
+    gap: 15px;
   }
 }
