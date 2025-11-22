@@ -10,6 +10,11 @@ import BookingPage from './pages/BookingPage';
 import TripPlannerPage from './pages/TripPlannerPage';
 import TripPlanSummary from './pages/TripPlanSummary';
 import Checkout from './pages/Checkout';
+import InfluencerDashboard from './pages/InfluencerDashboard';
+
+
+
+
 import './App.css';
 
 function App() {
@@ -30,6 +35,8 @@ function App() {
           <Route path="/trip-planner/:destinationId" element={<TripPlannerPage />} />
           <Route path="/trip-summary" element={<TripPlanSummary />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/influencer-dashboard" element={<InfluencerDashboard />} />
+        
 
         </Routes>
       </Router>

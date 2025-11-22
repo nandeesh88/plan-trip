@@ -10,6 +10,8 @@ const TrendingDestination = ({ showMenuIcon = false }) => {
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [infoModalDestination, setInfoModalDestination] = useState(null);
   const [likedDestinations, setLikedDestinations] = useState({});
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -125,6 +127,30 @@ const TrendingDestination = ({ showMenuIcon = false }) => {
     }));
   };
 
+  const handleSearchOpen = () => {
+    setIsSearchOpen(true);
+  };
+
+  const handleSearchClose = () => {
+    setIsSearchOpen(false);
+    setSearchQuery('');
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+
+    const trimmedQuery = searchQuery.trim();
+
+    if (!trimmedQuery) {
+      alert('Please enter a search term');
+      return;
+    }
+
+    setIsSearchOpen(false);
+    navigate(`/search?q=${encodeURIComponent(trimmedQuery)}`);
+    setSearchQuery('');
+  };
+
   const getCardStyle = (index) => {
     let position = (index - currentIndex + destinations.length) % destinations.length;
     if (position > destinations.length / 2) {
@@ -155,241 +181,283 @@ const TrendingDestination = ({ showMenuIcon = false }) => {
   };
 
   return (
-    <section className="trending-destination" style={backgroundStyle}>
-      {showMenuIcon && (
-        <div className={`left-sidebar-menu ${isMenuOpen ? 'open' : ''}`}>
-          <div className="sidebar-menu-items">
-            {menuCategories.map((category, index) => (
-              <div
-                key={category.id}
-                className={`sidebar-menu-item ${index === 3 ? 'active' : ''}`}
-                onClick={() => handleCategoryClick(category)}
-              >
-                <div className="sidebar-icon">{category.icon}</div>
-                <div className="sidebar-name">{category.name}</div>
-              </div>
-            ))}
-          </div>
-          <div className="sidebar-close-btn" onClick={() => setIsMenuOpen(false)}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="2"/>
-              <path d="M15 9L9 15M9 9L15 15" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-            </svg>
-          </div>
-        </div>
-      )}
-
-      <div className="menu-toggle-icon" onClick={() => setIsMenuOpen(true)}>
-        <img src="/menuLogo.png" alt="Menu" />
-      </div>
-
-      <div className="trending-container">
-        <h2 className="trending-title">Trending Destination</h2>
-        
-        <div className="stacked-cards-wrapper">
-          <button className="nav-arrow nav-arrow-left" onClick={handlePrev} aria-label="Previous">
-            ‹
-          </button>
-          
-          <div className="stacked-cards-container">
-            {destinations.map((destination, index) => (
-              <div
-                key={destination.id}
-                className="destination-card stacked-card"
-                style={getCardStyle(index)}
-              >
-                <div className="card-image-container">
-                  <img
-                    src={destination.image}
-                    alt={destination.name}
-                    className="card-image"
-                  />
-                  
-                  {/* Info and Like Icons */}
-                  <div className="card-action-icons">
-                    <button 
-                      className="icon-btn info-icon-btn"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleInfoClick(destination);
-                      }}
-                      aria-label="Show information"
-                    >
-                      <img src="/info.png" alt="Info" />
-                    </button>
-                    <button 
-                      className={`icon-btn like-icon-btn ${likedDestinations[destination.id] ? 'liked' : ''}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleLikeClick(destination.id);
-                      }}
-                      aria-label={likedDestinations[destination.id] ? "Unlike" : "Like"}
-                    >
-                      <img src="/like.png" alt="Like" />
-                    </button>
-                  </div>
-                  
-                  <div className="icon-badge">
-                    <span className="destination-icon">{destination.icon}</span>
-                  </div>
-                  
-                  <div className="stats-container">
-                    <div className="stat-badge">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        <path d="M2 17L12 22L22 17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        <path d="M2 12L12 17L22 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                      <span>{destination.distance}</span>
-                    </div>
-                    
-                    <div className="stat-badge">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        <circle cx="9" cy="7" r="4" stroke="white" strokeWidth="2" />
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                      <span>{destination.visitors}</span>
-                    </div>
-                    
-                    <div className="stat-badge">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="white" strokeWidth="2" />
-                        <circle cx="12" cy="10" r="3" stroke="white" strokeWidth="2" />
-                      </svg>
-                      <span>{destination.rating}</span>
-                    </div>
-                  </div>
-                  
-                  <div className="card-content">
-                    <div className="location-info">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        <circle cx="12" cy="10" r="3" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                      <h3 className="location-name">{destination.name}</h3>
-                    </div>
-                    
-                    <p className="location-description">{destination.description}</p>
-                  </div>
+    <>
+      <section className="trending-destination" style={backgroundStyle}>
+        {showMenuIcon && (
+          <div className={`left-sidebar-menu ${isMenuOpen ? 'open' : ''}`}>
+            <div className="sidebar-menu-items">
+              {menuCategories.map((category, index) => (
+                <div
+                  key={category.id}
+                  className={`sidebar-menu-item ${index === 3 ? 'active' : ''}`}
+                  onClick={() => handleCategoryClick(category)}
+                >
+                  <div className="sidebar-icon">{category.icon}</div>
+                  <div className="sidebar-name">{category.name}</div>
                 </div>
-              </div>
-            ))}
-          </div>
-          
-          <button className="nav-arrow nav-arrow-right" onClick={handleNext} aria-label="Next">
-            ›
-          </button>
-        </div>
-        
-        <div className="pagination-dots">
-          {destinations.map((_, index) => (
-            <button
-              key={index}
-              className={`dot ${index === currentIndex ? 'active' : ''}`}
-              onClick={() => setCurrentIndex(index)}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
-        </div>
-        
-        <button className="plan-trip-btn" onClick={handleBookNow}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            <polyline points="3.27 6.96 12 12.01 20.73 6.96" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            <line x1="12" y1="22.08" x2="12" y2="12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          <span>Plan your SMART trip</span>
-        </button>
-      </div>
-      
-      <div className="side-buttons">
-        <button className="side-btn search-btn" aria-label="Search">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <circle cx="11" cy="11" r="8" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="m21 21-4.35-4.35" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
-        
-        <button className="side-btn chat-btn" aria-label="Chat">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
-        
-        <button className="side-btn menu-btn" aria-label="Menu">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <line x1="3" y1="12" x2="21" y2="12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            <line x1="3" y1="6" x2="21" y2="6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            <line x1="3" y1="18" x2="21" y2="18" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
-      </div>
-
-      {/* Info Modal */}
-      {showInfoModal && infoModalDestination && (
-        <div className="info-modal-overlay" onClick={() => setShowInfoModal(false)}>
-          <div className="info-modal" onClick={(e) => e.stopPropagation()}>
-            <button className="info-modal-close" onClick={() => setShowInfoModal(false)}>
+              ))}
+            </div>
+            <div className="sidebar-close-btn" onClick={() => setIsMenuOpen(false)}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="2" />
+                <path d="M15 9L9 15M9 9L15 15" stroke="white" strokeWidth="2" strokeLinecap="round" />
               </svg>
+            </div>
+          </div>
+        )}
+
+        <div className="menu-toggle-icon" onClick={() => setIsMenuOpen(true)}>
+          <img src="/menuLogo.png" alt="Menu" />
+        </div>
+
+        <div className="trending-container">
+          <h2 className="trending-title">Trending Destination</h2>
+
+          <div className="stacked-cards-wrapper">
+            <button className="nav-arrow nav-arrow-left" onClick={handlePrev} aria-label="Previous">
+              ‹
             </button>
-            <div className="info-modal-content">
-              <div className="info-modal-icon">{infoModalDestination.icon}</div>
-              <h2>{infoModalDestination.name}</h2>
-              <p className="info-modal-description">{infoModalDestination.detailedInfo}</p>
-              <div className="info-modal-stats">
-                <div className="info-stat">
-                  <span className="info-stat-label">Distance</span>
-                  <span className="info-stat-value">{infoModalDestination.distance}</span>
+
+            <div className="stacked-cards-container">
+              {destinations.map((destination, index) => (
+                <div
+                  key={destination.id}
+                  className="destination-card stacked-card"
+                  style={getCardStyle(index)}
+                >
+                  <div className="card-image-container">
+                    <img
+                      src={destination.image}
+                      alt={destination.name}
+                      className="card-image"
+                    />
+
+                    {/* Info and Like Icons */}
+                    <div className="card-action-icons">
+                      <button
+                        className="icon-btn info-icon-btn"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleInfoClick(destination);
+                        }}
+                        aria-label="Show information"
+                      >
+                        <img src="/info.png" alt="Info" />
+                      </button>
+                      <button
+                        className={`icon-btn like-icon-btn ${likedDestinations[destination.id] ? 'liked' : ''}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleLikeClick(destination.id);
+                        }}
+                        aria-label={likedDestinations[destination.id] ? "Unlike" : "Like"}
+                      >
+                        <img src="/like.png" alt="Like" />
+                      </button>
+                    </div>
+
+                    <div className="icon-badge">
+                      <span className="destination-icon">{destination.icon}</span>
+                    </div>
+
+                    <div className="stats-container">
+                      <div className="stat-badge">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                          <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          <path d="M2 17L12 22L22 17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          <path d="M2 12L12 17L22 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                        <span>{destination.distance}</span>
+                      </div>
+
+                      <div className="stat-badge">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          <circle cx="9" cy="7" r="4" stroke="white" strokeWidth="2" />
+                          <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                        <span>{destination.visitors}</span>
+                      </div>
+
+                      <div className="stat-badge">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="white" strokeWidth="2" />
+                          <circle cx="12" cy="10" r="3" stroke="white" strokeWidth="2" />
+                        </svg>
+                        <span>{destination.rating}</span>
+                      </div>
+                    </div>
+
+                    <div className="card-content">
+                      <div className="location-info">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          <circle cx="12" cy="10" r="3" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                        <h3 className="location-name">{destination.name}</h3>
+                      </div>
+
+                      <p className="location-description">{destination.description}</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="info-stat">
-                  <span className="info-stat-label">Visitors</span>
-                  <span className="info-stat-value">{infoModalDestination.visitors}K+</span>
-                </div>
-                <div className="info-stat">
-                  <span className="info-stat-label">Price from</span>
-                  <span className="info-stat-value">${infoModalDestination.price}</span>
+              ))}
+            </div>
+
+            <button className="nav-arrow nav-arrow-right" onClick={handleNext} aria-label="Next">
+              ›
+            </button>
+          </div>
+
+          <div className="pagination-dots">
+            {destinations.map((_, index) => (
+              <button
+                key={index}
+                className={`dot ${index === currentIndex ? 'active' : ''}`}
+                onClick={() => setCurrentIndex(index)}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+
+          <button className="plan-trip-btn" onClick={handleBookNow}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <line x1="12" y1="22.08" x2="12" y2="12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <span>Plan your SMART trip</span>
+          </button>
+        </div>
+
+        <div className="side-buttons">
+          <button className="side-btn search-btn" aria-label="Search" onClick={handleSearchOpen}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <circle cx="11" cy="11" r="8" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="m21 21-4.35-4.35" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+
+          <button className="side-btn chat-btn" aria-label="Chat">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+
+          <button className="side-btn menu-btn" aria-label="Menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <line x1="3" y1="12" x2="21" y2="12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <line x1="3" y1="6" x2="21" y2="6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <line x1="3" y1="18" x2="21" y2="18" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Info Modal */}
+        {showInfoModal && infoModalDestination && (
+          <div className="info-modal-overlay" onClick={() => setShowInfoModal(false)}>
+            <div className="info-modal" onClick={(e) => e.stopPropagation()}>
+              <button className="info-modal-close" onClick={() => setShowInfoModal(false)}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              </button>
+              <div className="info-modal-content">
+                <div className="info-modal-icon">{infoModalDestination.icon}</div>
+                <h2>{infoModalDestination.name}</h2>
+                <p className="info-modal-description">{infoModalDestination.detailedInfo}</p>
+                <div className="info-modal-stats">
+                  <div className="info-stat">
+                    <span className="info-stat-label">Distance</span>
+                    <span className="info-stat-value">{infoModalDestination.distance}</span>
+                  </div>
+                  <div className="info-stat">
+                    <span className="info-stat-label">Visitors</span>
+                    <span className="info-stat-value">{infoModalDestination.visitors}K+</span>
+                  </div>
+                  <div className="info-stat">
+                    <span className="info-stat-label">Price from</span>
+                    <span className="info-stat-value">${infoModalDestination.price}</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Login Modal */}
-      {showLoginModal && (
-        <div className="login-required-overlay" onClick={() => setShowLoginModal(false)}>
-          <div className="login-required-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-icon-container">
-              <svg width="80" height="80" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10" stroke="url(#gradient)" strokeWidth="2" />
-                <path d="M12 8v4M12 16h.01" stroke="url(#gradient)" strokeWidth="2" strokeLinecap="round" />
-                <defs>
-                  <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#667eea" />
-                    <stop offset="100%" stopColor="#764ba2" />
-                  </linearGradient>
-                </defs>
-              </svg>
+        {/* Login Modal */}
+        {showLoginModal && (
+          <div className="login-required-overlay" onClick={() => setShowLoginModal(false)}>
+            <div className="login-required-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-icon-container">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="url(#gradient)" strokeWidth="2" />
+                  <path d="M12 8v4M12 16h.01" stroke="url(#gradient)" strokeWidth="2" strokeLinecap="round" />
+                  <defs>
+                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#667eea" />
+                      <stop offset="100%" stopColor="#764ba2" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+
+              <h2 className="modal-heading">Sign In Required</h2>
+              <p className="modal-message">Please sign in to book your dream vacation to {destinations[currentIndex].name}</p>
+
+              <div className="modal-actions">
+                <button className="modal-btn-primary" onClick={handleLoginRedirect}>
+                  Sign In Now
+                </button>
+                <button className="modal-btn-secondary" onClick={() => setShowLoginModal(false)}>
+                  Maybe Later
+                </button>
+              </div>
             </div>
-            
-            <h2 className="modal-heading">Sign In Required</h2>
-            <p className="modal-message">Please sign in to book your dream vacation to {destinations[currentIndex].name}</p>
-            
-            <div className="modal-actions">
-              <button className="modal-btn-primary" onClick={handleLoginRedirect}>
-                Sign In Now
-              </button>
-              <button className="modal-btn-secondary" onClick={() => setShowLoginModal(false)}>
-                Maybe Later
-              </button>
-            </div>
+          </div>
+        )}
+      </section>
+
+      {/* Search Overlay */}
+      {isSearchOpen && (
+        <div
+          className="search-overlay"
+          style={{
+            backgroundImage: "url('/search.png')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat'
+          }}
+        >
+          <div className="search-overlay-content">
+            <button className="search-close-btn" onClick={handleSearchClose} aria-label="Close search">
+              ×
+            </button>
+            <h2 className="search-overlay-title">Explore the World</h2>
+            <form onSubmit={handleSearchSubmit} className="search-overlay-form">
+              <div className="search-input-wrapper">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="search-input-icon">
+                  <circle cx="11" cy="11" r="8" stroke="#667eea" strokeWidth="2" />
+                  <path d="m21 21-4.35-4.35" stroke="#667eea" strokeWidth="2" />
+                </svg>
+                <input
+                  type="text"
+                  className="search-overlay-input"
+                  placeholder="Where do you want to go? (e.g., Paris, beaches, food tours)"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  autoFocus
+                />
+                <button type="submit" className="search-submit-btn" aria-label="Search">
+                  →
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
-    </section>
+
+    </>
   );
 };
 

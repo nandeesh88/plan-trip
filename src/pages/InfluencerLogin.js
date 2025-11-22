@@ -49,32 +49,33 @@ const InfluencerLogin = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) return;
-    setIsLoading(true);
-    setLoginError('');
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      const userData = {
-        name: formData.email.includes('@')
-          ? formData.email.split('@')[0]
-          : formData.email,
-        email: formData.email,
-        avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(
-          formData.email
-        )}&background=764ba2&color=fff`,
-        userType: 'influencer'
-      };
-      login(userData);
-      navigate('/');
-    } catch (error) {
-      setLoginError(
-        'Login failed. Please check your credentials and try again.'
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  e.preventDefault();
+  if (!validateForm()) return;
+  setIsLoading(true);
+  setLoginError('');
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const userData = {
+      name: formData.email.includes('@')
+        ? formData.email.split('@')[0]
+        : formData.email,
+      email: formData.email,
+      avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(
+        formData.email
+      )}&background=764ba2&color=fff`,
+      userType: 'influencer'
+    };
+    login(userData);
+    navigate('/influencer-dashboard'); // ✅ Changed from '/' to '/influencer-dashboard'
+  } catch (error) {
+    setLoginError(
+      'Login failed. Please check your credentials and try again.'
+    );
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   const handleSocialAuth = (provider) => {
     setLoginError(`${provider} authentication is not yet implemented`);

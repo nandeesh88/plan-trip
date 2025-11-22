@@ -180,7 +180,7 @@
 
 /* Events Panel */
 .events-panel {
-  background: white;
+  background:black;
   border-radius: 20px 0 0 20px;
   padding: 30px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
@@ -414,7 +414,7 @@
 
 /* Summary Panel */
 .summary-panel {
-  background: white;
+  background: black;
   border-radius: 0 20px 20px 0;
   padding: 30px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
