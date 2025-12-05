@@ -43,6 +43,11 @@ const TripPlanSummary = () => {
         setCurrentPlaceIndex((prev) => (prev === placesToVisit.length - 1 ? 0 : prev + 1));
     };
 
+    // Navigate to Day Wise Plan
+    const handleViewDayPlan = () => {
+        navigate('/daywise-plan');
+    };
+
     // Navigate to Checkout
     const handleBookTrip = () => {
         navigate('/checkout', {
@@ -59,12 +64,10 @@ const TripPlanSummary = () => {
             <div className="summary-header">
                 <div className="header-logo">
                     <svg width="40" height="40" viewBox="0 0 50 50" fill="none">
-                        
-                        <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" fill="white" fontSize="20"></text>
+                        <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" fill="white" fontSize="20">P&T</text>
                     </svg>
                 </div>
                 <div className="header-title">YOUR PERFECT JAPAN PLAN</div>
-                
             </div>
 
             {/* Main Content */}
@@ -143,7 +146,7 @@ const TripPlanSummary = () => {
                                     </button>
                                     <button className="place-action-btn info-btn">
                                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                                            <circle cx="12" cy="12" r="10"></circle>
+                                            
                                             <line x1="12" y1="16" x2="12" y2="12"></line>
                                             <line x1="12" y1="8" x2="12.01" y2="8"></line>
                                         </svg>
@@ -182,7 +185,9 @@ const TripPlanSummary = () => {
                 <div className="right-column">
                     {/* Action Buttons */}
                     <div className="action-buttons-row">
-                        <button className="action-btn primary">View Daywise Plan</button>
+                        <button className="action-btn primary" onClick={handleViewDayPlan}>
+                            View Daywise Plan
+                        </button>
                         <button className="action-btn secondary" onClick={handleBookTrip}>
                             Book Trip
                         </button>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './TrendingDestination.css';
+import './DestinationCard.css';
 
 const TrendingDestination = () => {
   const [currentIndex, setCurrentIndex] = useState(0);

@@ -11,6 +11,7 @@ import TripPlannerPage from './pages/TripPlannerPage';
 import TripPlanSummary from './pages/TripPlanSummary';
 import Checkout from './pages/Checkout';
 import InfluencerDashboard from './pages/InfluencerDashboard';
+import DayWisePlan from './pages/DayWisePlan';
 
 
 
@@ -36,6 +37,7 @@ function App() {
           <Route path="/trip-summary" element={<TripPlanSummary />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/influencer-dashboard" element={<InfluencerDashboard />} />
+          <Route path="/daywise-plan" element={<DayWisePlan />} />
         
 
         </Routes>
